@@ -1,0 +1,133 @@
+package action;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import bean.Login;
+import bean.Register;
+import bean.Users;
+import bean.UsersType;
+import service.impl.RegisterServiceImpl;
+import service.impl.ServiceforAccount;
+import service.impl.UsersServiceImpl;
+
+/**
+ * Servlet implementation class Register
+ */
+@WebServlet("/Registerservlet")
+public class Registerservlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		String method=request.getParameter("method");
+		if(method.equals("checkaccount"))
+		{
+			boolean isFlag=true;
+			List<String> list=new ArrayList<String>();
+			list=new ServiceforAccount().findAllNickName();
+			String newaccount=request.getParameter("account");
+			
+			PrintWriter out=response.getWriter();
+			
+			for(String nickname:list)
+			{
+				if(nickname.equals(newaccount))
+				{
+					isFlag=false;
+				}
+			}
+			if(!isFlag)
+			{
+				out.print("用户名已占用！");
+				
+			}
+			else
+			{
+				out.print("可用");
+			}
+			out.flush();
+			out.close();
+		}
+		if(method.equals("register"))
+		{
+			String account=request.getParameter("account");
+			String password=request.getParameter("password");
+			String name=request.getParameter("name");
+			String phone=request.getParameter("phone");
+			String address=request.getParameter("address");
+			String school=request.getParameter("school");
+			String major=request.getParameter("major");
+			String sex=request.getParameter("sex");
+			String identifycode=request.getParameter("identifycode");
+			String age=request.getParameter("age");
+			
+			
+			
+			Register register=new Register(method, account, password, name, phone, address, school, major, sex, identifycode,age);
+			
+			
+			
+			UsersType type=new UsersType(4,"普通用户");
+			Users users=new Users(0, register.getName(), register.getAddress(), register.getSex(), register.getPhone(), Integer.parseInt(register.getAge()),register.getSchool(), register.getMajor(), type);
+			
+			PrintWriter out=response.getWriter();
+			if(new RegisterServiceImpl().doNewUser(users))
+			{ 
+				Login login=new Login(0,register.getAccount(), type, register.getPassword(),new UsersServiceImpl().getUsersByPhone(phone));
+				if(new RegisterServiceImpl().doNewLogin(login))
+				  {
+					 out.print("注册成功！");
+				  }
+				  else
+				  {
+					  out.print("注册失败！");
+				  }
+			}
+			else
+			{
+				out.print("注册失败！");
+			}
+			out.flush();
+			out.close();
+		}
+		if(method.equals("checkphone"))
+		{
+			PrintWriter out=response.getWriter();
+			String phone=request.getParameter("phone");
+			if(new UsersServiceImpl().checkphone(phone))
+			{
+				out.print(1);
+			}
+			else
+			{
+				out.print(0);
+			}
+			out.flush();
+			out.close();
+		}
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+	}
+
+}

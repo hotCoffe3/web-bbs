@@ -1,0 +1,173 @@
+#logo{
+	position: relative;
+	left: 0px;
+	top:0px;
+	display: inline;
+}
+#menu{
+	position: relative;
+	left:90%;
+	top:-20px;
+	width: 140px;
+	overflow: hidden;
+}
+#menu a{
+	font-family: serif;
+	font-size: 18px;
+}
+hr{
+	position: relative;
+	top:-25px;
+}
+#time{
+	position: relative;
+	top:-25px;
+}
+#selectDiv{
+	position: relative;
+	right: -30%;
+	top:-115px;
+	width: 140px;
+	border-style: solid;
+	border-width: 1px;
+	border-color: blue;
+}
+#textDiv{
+	position: relative;
+	right: -50%;
+	top:-150px;
+	width: 275px;
+	height:32px;
+	border-style: solid;
+	border-width: 1px;
+	border-color: blue;
+	overflow: hidden;
+}
+marquee {
+	position: relative;
+	top:-70px;
+	width:69%;
+	text-decoration:underline;
+	font-style:italic;
+	background-color: #E8F2FE;
+}
+input {
+	border: none;
+}
+select {
+	border: none;
+	border-left-style: solid;
+	border-left-color: blue;
+	border-left-width: 1px;
+}
+#search{
+	background-image: url("../images/search.png");
+	width:50px;
+	height:32px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-top: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	padding-right: 0px;
+	padding-top: 0px;
+}
+#s,#text{
+	position: relative;
+	top:-10px;
+}
+#web{
+	position: relative;
+	top:-30px;
+	width: 1100px;
+	margin-left: 20px;
+}
+#web span b{
+	color: blue;
+}
+#web span{
+	width: 150px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-left: 20px;
+	padding-right: 20px;
+	background-color: #D7FBF6;
+}
+form{
+	width: 1000px;
+	height: 0px;
+}
+ul{
+	list-style-type: none;
+}
+#list ul li{
+	width: 150px;
+	height: 20px;
+	text-align: center;
+	padding-top: 15px;
+	padding-bottom:15px;
+	margin-top: 0px;
+	margin-left:-45px;
+	
+	padding-left: 45px;
+	padding-right: 27px;
+}
+#list ul{
+	
+	margin: 0px;
+}
+#list{
+	border-style: solid;
+	border-color: #808080;
+	background-color:#808080;
+    width: 220px;
+    position: relative;
+    left:20px;
+    padding-bottom: 15px;
+}
+#list ul li a{
+	font-style: oblique;
+	font-size: 25px;
+	margin-bottom: -2px;
+}
+#hotPost
+{
+	border-color: gray;
+	position: absolute;
+	left: 20%;
+	top:23%;
+}
+
+#usersDate {
+	
+	position: absolute;
+	left: 500px;
+}
+#newPost
+{
+	border-color: gray;
+	position: absolute;
+	left: 20%;
+	top:110%;
+}
+#showSearch
+{
+	border-color: gray;
+	position: absolute;
+	left: 20%;
+	top:23%;
+}
+#info
+{
+	border-color: gray;
+	position: fixed;
+	left: 80%;
+	top:23%;
+}
+#ad
+{
+	position: fixed;
+	top:23%;
+	left: 73%;
+}

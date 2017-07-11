@@ -1,0 +1,48 @@
+package action;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Date;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import bean.Pay;
+import bean.Users;
+import cn.itcast.commons.CommonUtils;
+import dao.impl.PayDaoImpl;
+
+
+public class CreatePay extends HttpServlet {
+
+	public void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+			Pay pay=new Pay();
+//		if(request.getSession().getAttribute("currentUser")!=null){
+//			Users currentUser=(Users)request.getSession().getAttribute("currentUser");
+//			pay.setUserId(currentUser);
+		
+			Users user=new Users();
+			user.setId(14);
+			pay.setUserId(user);
+			pay.setPayUUId(CommonUtils.uuid());
+			pay.setPayTime(new Date().toLocaleString());
+			boolean isflag=new PayDaoImpl().doPay(pay);
+			if(isflag){
+				response.getWriter().print(pay.getPayUUId()+","+pay.getPayTime());
+//				PrintWriter out=response.getWriter();
+//				out.println(pay.getPayUUId()+","+pay.getPayTime());
+//				out.flush();
+			}
+		}
+//	}
+	
+
+
+	public void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+	
+	}	
+}

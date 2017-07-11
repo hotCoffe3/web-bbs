@@ -1,0 +1,220 @@
+package action;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Properties;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import bean.Pay;
+import bean.Users;
+import dao.impl.LoginDaoImpl;
+import dao.impl.PayDaoImpl;
+import dao.impl.UsersDaoImpl;
+import dao.impl.UsersTypeDaoImpl;
+
+public class OrderServlet extends HttpServlet {
+
+	public void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		HttpSession session=request.getSession();
+		String p1_MerId = request.getParameter("p1_MerId");
+		String r0_Cmd = request.getParameter("r0_Cmd");
+		String r1_Code = request.getParameter("r1_Code");
+		String r2_TrxId = request.getParameter("r2_TrxId");
+		String r3_Amt = request.getParameter("r3_Amt");
+		String r4_Cur = request.getParameter("r4_Cur");
+		String r5_Pid = request.getParameter("r5_Pid");
+		String r6_Order = request.getParameter("r6_Order");
+		String r7_Uid = request.getParameter("r7_Uid");
+		String r8_MP = request.getParameter("r8_MP");
+		String r9_BType = request.getParameter("r9_BType");
+
+		String hmac = request.getParameter("hmac");
+		Properties props = new Properties();
+		InputStream input = this.getClass().getClassLoader()
+				.getResourceAsStream("merchantInfo.properties");
+		props.load(input);
+		String keyValue = props.getProperty("keyValue");
+		boolean bool = PaymentUtil.verifyCallback(hmac, p1_MerId, r0_Cmd,
+				r1_Code, r2_TrxId, r3_Amt, r4_Cur, r5_Pid, r6_Order, r7_Uid,
+				r8_MP, r9_BType, keyValue);
+		
+		if(!bool) {//如果校验失败
+			session.setAttribute("Msg","支付失败，请按合法渠道交易！");
+			response.sendRedirect("/bbs/page/msg.jsp");
+		}
+	
+		if(r9_BType.equals("2")) {
+			response.getWriter().print("success");
+		}
+		
+		Pay pay=new PayDaoImpl().findPayByOrderId(r6_Order);
+		if(session.getAttribute("currentUser")!=null){
+			Users user=(Users)session.getAttribute("currentUser");
+			boolean isflag2=false;
+			boolean isflag1=false;
+			boolean isflag3=false;
+			if(pay.getMoney()==10){
+				isflag1=new PayDaoImpl().updatePayEndtime(30, pay);
+				session.setAttribute("usertype", "普通会员");
+				user.setTypeId(new UsersTypeDaoImpl().getUsersTypeById(2));
+				isflag2=new UsersDaoImpl().updateUsersType(2, user.getId());
+				isflag3=new LoginDaoImpl().updateUsertype(2, user);
+			}else if(pay.getMoney()==18){
+				isflag1=new PayDaoImpl().updatePayEndtime(60, pay);
+				session.setAttribute("usertype", "普通会员");
+				isflag2=new UsersDaoImpl().updateUsersType(2, user.getId());
+				user.setTypeId(new UsersTypeDaoImpl().getUsersTypeById(2));
+				isflag3=new LoginDaoImpl().updateUsertype(2, user);
+			}else if(pay.getMoney()==27){
+				isflag1=new PayDaoImpl().updatePayEndtime(90, pay);
+				session.setAttribute("usertype", "普通会员");
+				isflag2=new UsersDaoImpl().updateUsersType(2, user.getId());
+				user.setTypeId(new UsersTypeDaoImpl().getUsersTypeById(2));
+				isflag3=new LoginDaoImpl().updateUsertype(2, user);
+			}else if(pay.getMoney()==45){
+				isflag1=new PayDaoImpl().updatePayEndtime(150, pay);
+				session.setAttribute("usertype", "普通会员");
+				isflag2=new UsersDaoImpl().updateUsersType(2, user.getId());
+				user.setTypeId(new UsersTypeDaoImpl().getUsersTypeById(2));
+				isflag3=new LoginDaoImpl().updateUsertype(2, user);
+			}else if(pay.getMoney()==100){
+				isflag1=new PayDaoImpl().updatePayEndtime(365, pay);
+				session.setAttribute("usertype", "年费会员");
+				isflag2=new UsersDaoImpl().updateUsersType(3, user.getId());
+				user.setTypeId(new UsersTypeDaoImpl().getUsersTypeById(3));
+				isflag3=new LoginDaoImpl().updateUsertype(3, user);
+			}else if(pay.getMoney()==180){
+				isflag1=new PayDaoImpl().updatePayEndtime(365*2, pay);
+				session.setAttribute("usertype", "年费会员");
+				isflag2=new UsersDaoImpl().updateUsersType(3, user.getId());
+				user.setTypeId(new UsersTypeDaoImpl().getUsersTypeById(3));
+				isflag3=new LoginDaoImpl().updateUsertype(3, user);
+			}else if(pay.getMoney()==270){
+				isflag1=new PayDaoImpl().updatePayEndtime(365*3, pay);
+				session.setAttribute("usertype", "年费会员");
+				isflag2=new UsersDaoImpl().updateUsersType(3, user.getId());
+				user.setTypeId(new UsersTypeDaoImpl().getUsersTypeById(3));
+				isflag3=new LoginDaoImpl().updateUsertype(3, user);
+			}else if(pay.getMoney()==450){
+				isflag1=new PayDaoImpl().updatePayEndtime(365*5, pay);
+				session.setAttribute("usertype", "年费会员");
+				isflag2=new UsersDaoImpl().updateUsersType(3, user.getId());
+				user.setTypeId(new UsersTypeDaoImpl().getUsersTypeById(3));
+				isflag3=new LoginDaoImpl().updateUsertype(3, user);
+			}
+
+			if(isflag1==true&&isflag2==true&&isflag3==true){
+				session.setAttribute("Msg","支付成功！");
+				session.setAttribute("currentUser",user);
+			}
+			
+			List<Pay> ls=new PayDaoImpl().findAllPayByUserid(user.getId());
+			long currrentTime=new Date().getTime();
+			long sum=0;
+			for(Pay pay1:ls){
+				SimpleDateFormat formatter = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss");
+				Date endtime;
+				try {
+					endtime = formatter.parse(pay1.getEndTime());
+					long endTime=endtime.getTime();
+					if(endTime>currrentTime){
+						sum=endTime-currrentTime;
+					}
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+			}
+			long min=sum/1000;
+			long sec=min/60;
+			long hour=sec/60;
+			long day1=hour/24;
+			if(day1>365){
+				long year=day1/365;
+				long day=day1%365;
+				long mon=day/30;
+				day=day%30;
+				session.setAttribute("day",day);
+				session.setAttribute("mon",mon);
+				session.setAttribute("year",year);
+			}else if(day1>30){
+				long mon=day1/30;
+				long day=day1%30;
+				session.setAttribute("day",day);
+				session.setAttribute("mon",mon);
+			}else{
+				session.setAttribute("day",day1);
+			}
+			session.setAttribute("day1",day1);
+		}
+				
+//		session.setAttribute("Msg","支付成功！");
+//		session.setAttribute("orderId", r6_Order);
+		response.sendRedirect("/bbs/page/msg.jsp");
+		
+	}
+
+	public void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		Properties props=new Properties();
+		InputStream input=this.getClass().getClassLoader().getResourceAsStream("merchantInfo.properties");
+		props.load(input);
+		
+		String p0_Cmd="Buy";
+		String p1_MerId=props.getProperty("p1_MerId");
+		String p2_Order=request.getParameter("orderid");
+		String p3_Amt="0.01";
+		String p4_Cur="CNY";
+		String p5_Pid="";
+		String p6_Pcat="";
+		String p7_Pdesc="";
+		String p8_Url=props.getProperty("p8_Url");
+		String p9_SAF="";
+		String pa_MP="";
+		String pd_FrpId=request.getParameter("pd_FrpId");
+		String pr_NeedResponse="1";
+		
+		String keyValue=props.getProperty("keyValue");
+		String hmac=PaymentUtil.buildHmac(p0_Cmd, p1_MerId, p2_Order, p3_Amt, p4_Cur, p5_Pid, p6_Pcat, p7_Pdesc, p8_Url, p9_SAF, pa_MP, pd_FrpId, pr_NeedResponse, keyValue);
+	
+		StringBuilder url=new StringBuilder(props.getProperty("url"));
+		url.append("?p0_Cmd=").append(p0_Cmd);
+		url.append("&p1_MerId=").append(p1_MerId);
+		url.append("&p2_Order=").append(p2_Order);
+		url.append("&p3_Amt=").append(p3_Amt);
+		url.append("&p4_Cur=").append(p4_Cur);
+		url.append("&p5_Pid=").append(p5_Pid);
+		url.append("&p6_Pcat=").append(p6_Pcat);
+		url.append("&p7_Pdesc=").append(p7_Pdesc);
+		url.append("&p8_Url=").append(p8_Url);
+		url.append("&p9_SAF=").append(p9_SAF);
+		url.append("&pa_MP=").append(pa_MP);
+		url.append("&pd_FrpId=").append(pd_FrpId);
+		url.append("&pr_NeedResponse=").append(pr_NeedResponse);
+		url.append("&hmac=").append(hmac);
+	
+		response.sendRedirect(url.toString());
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

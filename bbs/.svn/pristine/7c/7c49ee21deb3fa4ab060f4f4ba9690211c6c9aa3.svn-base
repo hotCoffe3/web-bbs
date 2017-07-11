@@ -1,0 +1,29 @@
+package action;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import service.impl.UsersServiceImpl;
+import bean.Users;
+
+public class GetPostMessage extends HttpServlet {
+
+	public void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		String idString=(String)request.getAttribute("usersId");
+		int UserId =Integer.parseInt(idString);
+		Users user=new UsersServiceImpl().getUsersById(UserId);
+		String userName=user.getName();
+		request.setAttribute("UserName", userName);
+		request.getRequestDispatcher("page/postmessage.jsp").forward(request, response);
+	}
+
+	public void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+	}
+
+}

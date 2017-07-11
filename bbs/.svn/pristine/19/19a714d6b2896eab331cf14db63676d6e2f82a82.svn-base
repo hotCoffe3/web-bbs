@@ -1,0 +1,7 @@
+package dao;
+
+public interface NewsDao {
+	
+	
+	public int isNews(int count,int postId);//通过传入上一次的评论数，和当前评论数相比，从而得知有没有新消息
+}

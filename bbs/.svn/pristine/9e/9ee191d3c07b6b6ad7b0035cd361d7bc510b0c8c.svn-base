@@ -1,0 +1,12 @@
+package dao;
+
+import java.util.List;
+
+import bean.Pay;
+
+public interface PayDao {
+	public List<Pay> findAllPay();//查找所有充值记录
+	public boolean doPay(Pay pay);//生成充值账单
+	public boolean delPay(Pay pay);//删除充值账单
+	public boolean updatePay(Pay pay);//更新账单
+}

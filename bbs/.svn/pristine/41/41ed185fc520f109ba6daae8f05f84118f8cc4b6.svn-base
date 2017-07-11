@@ -1,0 +1,22 @@
+function st(obj)
+{
+	obj.style.backgroundColor="#0080ff";
+}
+function reflash(obj)
+{
+	obj.style.backgroundColor="#D7FBF6";
+}
+
+
+
+$(function(){
+	$("#kkk").click(function(){
+		$("#001").fadeToggle(3000);
+		for(var i=0;i<100;i++)
+			{};
+		$("#002").fadeToggle(3000);
+		$("#003").fadeToggle(3000);
+		$("#004").fadeToggle(3000);
+	}
+			)
+});

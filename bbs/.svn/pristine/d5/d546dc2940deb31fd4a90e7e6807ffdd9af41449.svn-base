@@ -1,0 +1,12 @@
+package dao;
+
+import java.util.List;
+
+import bean.Discuss;
+import bean.Post;
+
+public interface DiscussDao {
+	public List<Discuss> getDiscussByPostId(Post post);//根据贴得到该贴的回复
+	public boolean doDiscuss(Discuss discuss);		//添加贴回复
+	public boolean deleteDiscuss(int id);			//删除贴回复
+}

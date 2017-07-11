@@ -1,0 +1,12 @@
+package service;
+
+import java.util.List;
+
+import bean.Users;
+
+public interface UsersService {
+	public Users getUsersById(int id);
+	public List<Users> findAll();
+	public boolean checkphone(String str);
+	public int getUsersByPhone(String phone);
+}

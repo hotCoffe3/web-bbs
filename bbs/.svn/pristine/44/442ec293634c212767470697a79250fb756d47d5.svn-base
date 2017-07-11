@@ -1,0 +1,83 @@
+package action;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+
+import bean.UserFace;
+import bean.Users;
+import cn.itcast.commons.CommonUtils;
+import dao.impl.UserFaceDaoImpl;
+import dao.impl.UsersDaoImpl;
+
+public class SubFace extends HttpServlet {
+	
+	public void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+	}
+	public void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		request.setCharacterEncoding("utf-8");
+		response.setContentType("text/html;charset=utf-8");
+		
+		DiskFileItemFactory factory=new DiskFileItemFactory();
+		ServletFileUpload sfu=new ServletFileUpload(factory);
+		try {
+			List<FileItem> fileItemList=sfu.parseRequest(request);
+			String savepath=this.getServletContext().getRealPath("/images/face_img");
+			String filename=CommonUtils.uuid()+"_"+fileItemList.get(0).getName();
+			File desFile=new File(savepath,filename);
+			fileItemList.get(0).write(desFile);
+			
+			if(request.getSession().getAttribute("loginId")!=null){
+				int userId=(int)request.getSession().getAttribute("loginId");
+				Users user=new UsersDaoImpl().getUsersById(userId);
+				UserFace userface=new UserFaceDaoImpl().findFacebyUser(user);
+				
+				if(userface==null){
+					userface=new UserFace();
+					userface.setUsersId(user);
+					userface.setFace("images/face_img/"+filename);
+					boolean isflag1=new UserFaceDaoImpl().DoUserFace(userface);
+					
+					if(isflag1==true){
+						response.getWriter().write("<script>alert('上传头像成功')</script>");
+					}
+					else{
+
+						response.getWriter().write("<script>alert('上传头像失败')</script>");
+					};
+				}
+				else{
+					File file=new File(this.getServletContext().getRealPath(userface.getFace()));
+					if(file.exists())
+						file.delete();
+					userface.setFace("images/face_img/"+filename);
+					boolean isflag2=new UserFaceDaoImpl().updateFace(userface,userface.getFace());
+					
+					if(isflag2==true){
+						response.getWriter().write("<script>alert('上传头像成功')</script>");
+
+					}
+					else{
+						response.getWriter().write("<script>alert('上传头像失败')</script>");
+
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+}

@@ -1,0 +1,95 @@
+package action;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebFilter;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import service.impl.NewsServiceImpl;
+import service.impl.PostServiceImpl;
+import bean.Post;
+
+/**
+ * Servlet Filter implementation class Encording
+ */
+@WebFilter("/*")
+public class Encording implements Filter {
+
+    /**
+     * Default constructor. 
+     */
+    public Encording() {
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see Filter#destroy()
+	 */
+	public void destroy() {
+		// TODO Auto-generated method stub
+	}
+
+	/**
+	 * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
+	 */
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+
+		// TODO Auto-generated method stub
+		// place your code here
+		HttpServletRequest re=(HttpServletRequest) request;
+		HttpSession session=re.getSession();
+		
+		
+		 ServletContext application=request.getServletContext();
+			
+			String path=application.getInitParameter("users");
+			
+			session.setAttribute("users", path);
+		 // System.out.println(path);
+		// pass the request along the filter chain
+
+		request.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html");
+//		int usersId=(int)session.getAttribute("loginId");
+//		List<Post> list=new PostServiceImpl().getPostByUsersId(usersId);
+//		NewsServiceImpl nsi=new NewsServiceImpl();
+//		int s=0;
+//		List<Post> listPost=new ArrayList<Post>();
+//		for(Post post:list)
+//		{
+//			int postId=post.getId();
+//			int old=nsi.isOld(postId);
+//			int news=nsi.isNew(postId);
+//			if(nsi.isNews(old, news))
+//			{
+//				s=s+news-old;
+//				nsi.doNews(postId);
+//				listPost.add(post);	
+//				System.out.println(news);
+//				System.out.println(old);
+//				System.out.println(s);
+//			}
+//			
+//		}
+//		session.setAttribute("listPost", listPost);
+//		session.setAttribute("s", s);
+		chain.doFilter(request, response);
+	}
+
+	
+	public void init(FilterConfig fConfig) throws ServletException {
+		// TODO Auto-generated method stub
+	}
+
+}

@@ -1,0 +1,35 @@
+@CHARSET "UTF-8";
+body{
+background-image:url(../images/game.jpg);}
+#res{
+	
+	position: relative;
+	left: 5%;
+	margin-top:100px;
+	background-color: white;
+	border-width: 1px;
+	border-style:solid;
+	border-radius:5px;
+	width: 40%;
+	height: 300%;
+	filter:alpha(Opacity=80);-moz-opacity:0.5;opacity: 0.5;
+	text-align: center;
+}
+label {
+	width: 110px;
+	height: 52px;
+	text-shadow: gray;
+	text-align: center;
+}
+input {
+	border: none;
+}
+#sex{
+	text-align: right;
+}
+th{
+	line-height: 40px
+}
+p{
+	color: red;
+}

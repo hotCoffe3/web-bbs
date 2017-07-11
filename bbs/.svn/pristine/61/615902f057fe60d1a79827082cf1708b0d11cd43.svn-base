@@ -1,0 +1,7 @@
+package service;
+
+import bean.Post;
+
+public interface PostService {
+	public Post getPostByid(int id);//通过postid得到post对象
+}

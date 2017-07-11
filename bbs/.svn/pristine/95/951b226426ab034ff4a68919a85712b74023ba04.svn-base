@@ -1,0 +1,64 @@
+function check(obj) {
+	var box=obj.options;
+	var value="";
+	for(var i=0;i<box.length;i++)
+	{
+		if(box[i].selected)
+		{
+			value=box[i].value;
+		}
+	}
+	reflash();
+	switch(value)
+	{
+	   case 'accountandphone':
+		   {
+		   		account();
+		   		phone();
+		   }break;
+	   case 'nameandaccount':
+		   {
+		   		name();
+		   		account();
+		   }break;
+	   case 'acccountandaddress':
+		   {
+		   		account();
+		   		address();
+		   }break;
+	   case 'nameandaddress':
+		   {
+		   		name();
+		   		address();
+		   }break;
+	   case 'phoneandaddress':
+		   {
+		   		phone();
+		   		address();
+		   }
+	}
+	
+}
+function reflash()
+{
+	document.getElementById("account").style.display="none";
+	document.getElementById("phone").style.display="none";
+	document.getElementById("address").style.display="none";
+	document.getElementById("name").style.display="none";
+}
+function account()
+{
+	document.getElementById("account").style.display="block";
+}
+function phone()
+{
+	document.getElementById("phone").style.display="block";
+}
+function address()
+{
+	document.getElementById("address").style.display="block";
+}
+function name()
+{
+	document.getElementById("name").style.display="block";
+}

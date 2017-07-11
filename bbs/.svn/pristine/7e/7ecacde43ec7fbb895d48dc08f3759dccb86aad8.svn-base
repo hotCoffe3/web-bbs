@@ -1,0 +1,49 @@
+package action;
+
+import java.io.IOException;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebFilter;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.websocket.Session;
+
+import bean.Register;
+
+/**
+ * Servlet Filter implementation class LoginCheckFilter
+ */
+@WebFilter("/*")
+public class LoginCheckFilter implements Filter {
+
+    public LoginCheckFilter() {
+    }
+	public void destroy() {
+		// TODO Auto-generated method stub
+	}
+
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+		HttpServletRequest request2=(HttpServletRequest) request;
+		HttpSession session=request2.getSession();
+		Register register=(Register) session.getAttribute("ClientMessageAfterLogin");
+		if(register==null)
+		{
+			session.setAttribute("login", "没登录");
+		}
+		else{
+			session.setAttribute("login", "已登录");
+		}
+		chain.doFilter(request, response);
+	
+	}
+
+	public void init(FilterConfig fConfig) throws ServletException {
+
+	}
+
+}

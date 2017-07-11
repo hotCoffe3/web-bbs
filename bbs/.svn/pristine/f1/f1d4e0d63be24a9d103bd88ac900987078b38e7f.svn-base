@@ -1,0 +1,49 @@
+@CHARSET "UTF-8";
+#toIndex{
+	position: absolute;
+	right: 200px;
+	top: 50px;
+}
+#toLogin{
+	position: absolute;
+	right: 150px;
+	top: 50px;
+}
+#toRes{
+	position: absolute;
+	right: 100px;
+	top: 50px;
+}
+#baidu{
+	position: absolute;
+	right: 65%;
+	top: 50px;
+}
+#textDiv{
+	position: absolute;
+	right: 30%;
+	top: 10.5%;
+	height: 30px;
+	width: 300px;
+}
+#selectDiv{
+	position: absolute;
+	right: 53.5%;
+	top: 10.5%;
+	
+}
+#search{
+	position: absolute;
+	right: 30%;
+	top: 10.5%;
+	height:35px;
+	width: 60px;
+	background-color:#317ef3;
+	border: none;
+}
+#hotPost
+{
+	position: absolute;
+	right: 65%;
+	top: 50px;
+}

@@ -1,0 +1,251 @@
+<%@page import="dao.impl.LoginDaoImpl"%>
+<%@page import="bean.Users"%>
+<%@page import="bean.Discuss"%>
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%
+String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <base href="<%=basePath%>">
+    
+    <title>My JSP 'MyJsp.jsp' starting page</title>
+    
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="expires" content="0">    
+	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+	<meta http-equiv="description" content="This is my page">
+	<!--
+	<link rel="stylesheet" type="text/css" href="styles.css">
+	-->
+
+  </head>
+  
+  <body>
+  <%
+  	String typeId=(String)request.getAttribute("typeId");
+  	String type="";
+  	String color="";
+  	if(typeId.equals("4")){
+  		type="普通用户";
+  		color="black";
+  	}else if(typeId.equals("3")){
+  		type="年费会员";
+  		color="blue";
+  	}else if(typeId.equals("2")){
+  		type="普通会员";
+  		color="orange";
+  	}else{
+  		type="管理员";
+  		color="red";
+  	}	
+   %>
+	<div style="width: 1200px; margin: 0 auto;">
+		<div class="container-fluid" style="padding-left: 0px;padding-right: 0px;">
+			<div class="row-fluid">
+				<div class="span2" style="width: 232px; display: inline;">
+					<table style="width: 211px;" cellpadding="5px;">
+						<tr>
+							<td>
+								★楼主&nbsp;<a href="#" style="font-size: 9pt;color: black;"><strong>${nickName}</strong></a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								性别：${poster.getSex()}
+							</td>
+						</tr>
+						<tr>
+							<td>
+								学校：${poster.getSchool() }
+							</td>
+						</tr>
+						<tr>
+							<td>
+								专业：${poster.getMajor() }
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<font style="color: <%=color %>;">
+									<%=type %>
+								</font>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div class="span10" style="width: 650px; ">
+					<table style="width: 623px; ">
+						<tr style="height: 50px;">
+							<td>
+								【主题】:<strong>${post.getTitle()}</strong>
+							</td>
+						</tr>
+						<tr>
+							<td style="text-align: right;">
+								发表时间:『${post.getDate() }』
+							</td>
+						</tr>
+						<tr>
+							<td>
+								【内容】:
+								<div style="width: 70%;padding:6px; background-color: #F0F0F0" class="show_e">
+									${post.getContent() }
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<%
+				ArrayList<Discuss> list=(ArrayList<Discuss>)request.getAttribute("discussList");
+					for(Discuss dis:list){
+					    String nickName2=new LoginDaoImpl().findNickNameByUsersId(dis.getUserid().getId()).getNickName();
+						String content=dis.getContent();
+						int index=list.indexOf(dis);
+						String time=dis.getTime();
+						String sex=dis.getUserid().getSex();
+						String school=dis.getUserid().getSchool();
+						String major=dis.getUserid().getMajor();
+						int typeId2=dis.getUserid().getTypeId().getId();
+						String color2="";
+						String type2="";
+						if(typeId2==4){
+					  		type2="普通用户";
+					  		color2="black";
+					  	}else if(typeId2==3){
+					  		type2="年费会员";
+					  		color2="blue";
+					  	}else if(typeId2==2){
+					  		type2="普通会员";
+					  		color2="orange";
+					  	}else{
+					  		type2="管理员";
+					  		color2="red";
+					  	}
+			%>
+					  	<div class="row-fluid" style="margin-top: 20px;">
+				 			<div class="span2">
+				 				<table style="width: 100%;" cellpadding="5px;">
+				 					<tr>
+										<td>
+											▲<%=index+1%>楼
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<a href="#" style="font-size: 9pt;color: black;"><strong><%=nickName2%></strong></a>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											性别：<%=sex %>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											学校：<%=school %>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											专业：<%=major %>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<font style="color: <%=color2 %>;">
+												<%=type2 %>
+											</font>
+										</td>
+									</tr>
+				 				</table>
+				 			</div>
+				 			<div class="span10">
+								<table style="width: 100%;">
+									<tr>
+										<td style="text-align: right;">
+											回复时间:『<%=time%>』
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<div style="width: 982px;padding:6px; background-color: #F0F0F0" class="show_e">
+												<%=content %>
+											</div>
+										</td>
+									</tr>
+								</table>
+							</div>
+				 		</div>
+				 <%
+					}
+				 %>
+				<%
+					if(list.size()==0){
+				%>
+				<div class="pagination alternate" align="center">
+						本帖还没有人回复
+				</div>
+				<%	
+					}
+				%>
+			<div>
+				<table>
+					<tr>
+						<td style="width: 20%;">
+							回帖许可：
+						</td>
+						<td style="width: 80%;">
+							<form id="replyForm" class="form-horizontal" style="margin-top: 10px;">
+							<table style="width: 100%;" cellpadding="10px;">
+								<%-- <tr>
+									<td>
+										【主题】:
+									</td>
+									<td>
+										<input type="text" id="rTopic" name="reply.rTopic" value="${reply.rTopic }" style="width: 800px;">
+									</td>
+								</tr> --%>
+								<tr>
+									<td>
+										【表情】:
+									</td>
+									<td>
+										<div id="container">
+										<a href="JavaScript:void(0)" id="message_face">请选择...</a>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td style="vertical-align: top;">
+										【内容】:
+									</td>
+									<td>
+										<textarea name="reply.content" id="Content" cols="50" style="height:200px;width: 800px;" ></textarea>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<input id="userId" name="reply.user.id" value="${currentUser.id }" type="hidden"/>
+										<input id="topicId" name="reply.topic.id" value="${topic.id }" type="hidden"/>
+									</td>
+									<td>
+										<Button class="btn btn-primary " data-dismiss="modal" aria-hidden="true" type="button" onclick="javascript:saveReply()">提交</Button>
+										<font id="error"></font>
+									</td>
+								</tr>
+							</table>
+							</form>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+  </body>
+</html>

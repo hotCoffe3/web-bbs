@@ -1,0 +1,13 @@
+package dao;
+
+import java.util.List;
+
+import bean.Users;
+
+public interface UsersDao {
+	public Users getUsersById(int id);
+	public List<Users> findAll();
+	public String checkPhoneexist(String phone);
+	public Users getUsersByPhone(String phone);
+	public Users getUsers(String sql);
+}

@@ -1,0 +1,42 @@
+package bean;
+
+public class Discuss {
+	private int id;
+	private Post postId;
+	private String content;
+	private String time;
+	
+	public String getTime() {
+		return time;
+	}
+	public void setTime(String time) {
+		this.time = time;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public Post getPostId() {
+		return postId;
+	}
+	public void setPostId(Post postId) {
+		this.postId = postId;
+	}
+	public String getContent() {
+		return content;
+	}
+	public void setContent(String content) {
+		this.content = content;
+	}
+	public Discuss(int id, Post postId, String content,String time) {
+		super();
+		this.id = id;
+		this.postId = postId;
+		this.content = content;
+		this.time=time;
+	}
+	public Discuss() {
+	}
+}

@@ -1,0 +1,107 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="shortcut icon" href="../images/shortcut.ico" type="image/x-icon">
+<link type="text/css" rel="stylesheet" href="<%=request.getContextPath()%>/css/index.css">
+<link type="text/css" rel="stylesheet" href="<%=request.getContextPath()%>/css/forgetpassword.css">
+<SCRIPT src="../js/forgetpassword.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="<%=request.getContextPath()%>/fromweb/jquery-1.9.1.min.js" type="text/javascript"></SCRIPT>
+<script type="text/javascript">
+	function getTime() {
+		var times=new Date();
+		document.getElementById('time').innerHTML=new Date().toLocaleString()+
+		' 星期'+'日一二三四五六'.charAt(new Date().getDay());
+		window.setTimeout(getTime, 1000);
+	}
+	window.onload=getTime;
+</script>
+<title>忘记密码</title>
+</head>
+<body>
+	
+	<img  id="logo" alt="logo" src="../images/06.jpg" style="width: 220px;height: 80px;">
+   <marquee scrollamount="6" id="tip"><strong>BBS是一个面向中国软件和软件人的综合社区网站。我们希望您能够在BBS上交流、学习、进步。BBS的各项电子服务的所有权和运作权归家乐网络技术有限公司。 BBS提供的服务将完全按照其发布的章程、服务条款和操作规则严格执行。 会员必须完全同意所有服务条款并完成注册程序，才能成为BBS的正式注册会员并享受BBS提供的更全面的服务。</strong></marquee>
+   <div id="menu"><a href="<%=request.getContextPath()%>/index.jsp" id="toIndex"><b>首页</b></a>
+		<a href="<%=request.getContextPath()%>/page/login.jsp" id="toLogin"><b>登录</b></a>
+		<a href="<%=request.getContextPath()%>/page/register.jsp" id="toRes"><b>注册</b></a></div>
+   <hr>
+	<span id="time">此处显示时间</span>
+	<span id="web">
+		<span onmousemove="st(this)" onmouseout="reflash(this)">
+			<b><a href="<%=request.getContextPath()%>/index.jsp">首 &nbsp;&nbsp;页</a></b>
+		</span>
+		<span onmousemove="st(this)"  onmouseout="reflash(this)">
+			<b><a href="/bbs/TypePageServlet?typeId=1&method=homePage">学无止境</a></b>
+		</span>
+		<span onmousemove="st(this)" onmouseout="reflash(this)">
+			<b><a href="/bbs/TypePageServlet?typeId=2&method=homePage">职来职往</a></b>
+		</span>
+		<span onmousemove="st(this)"  onmouseout="reflash(this)">
+			<b><a href="/bbs/TypePageServlet?typeId=4&method=homePage">游戏平台</a></b>
+		</span><span onmousemove="st(this)"  onmouseout="reflash(this)">
+			<b><a href="/bbs/TypePageServlet?typeId=3&method=homePage">社会交际</a></b>
+		</span><span onmousemove="st(this)"  onmouseout="reflash(this)">
+			<b><a href="">成为会员</a></b>
+		</span>
+		<span onmousemove="st(this)"  onmouseout="reflash(this)">
+			<b><a href="">关于我们</a></b>
+		</span>
+	</span>	
+		
+		
+		
+		
+		<!-- <img alt="" src="images/baidu.gif" id="baidu"> -->
+		<form  action="<%=request.getContextPath() %>/searchServlet" method="get">
+			<div id="selectDiv">
+			<strong>条件：</strong>
+				<select style="height: 35px;" name="select">
+				    <option value="content">文章内容</option>
+				    <option value="title">文章标题</option>
+				    <option value="nickName">文章作者</option>
+				</select>
+			</div>
+			<div id="textDiv">
+				<strong id="s">关键字：</strong><input type="text" id="text" name="text" placeholder="请输入搜索内容" style="height: 30px;"/>	
+				
+			<input type="submit" id="search" value=""></div>	
+		</form>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+		
+		<form method="post" action="<%=request.getContextPath() %>/findpassword">
+		<div id="message">
+			<div style="margin-top: -290px;margin-left: 80px;border-style: solid;border-width: 1px;border-color: black;width: 50%;border-radius:15px; ">
+				<strong style="border-style: solid;border-width: 1px;border-color: #DCEEF7;">请选择找回密码的方式：</Strong>
+				<select name="findpassword" style="width:130px;border-style: solid;border-width: 1px;border-color: #DCEEF7;" onclick="check(this)">
+					<option value="accountandphone" selected="selected">账户和电话号码</option>
+					<option value="nameandaccount">真实姓名和账户名</option>
+					<option value="acccountandaddress">账号名和家庭地址</option>
+					<option value="nameandaddress">真实姓名和家庭地址</option>
+					<option value="phoneandaddress">电话号码和家庭地址</option>
+				</select>
+				<hr style="margin-top: 30px;">			
+					<div id="find">
+					<div id="account" style="display: block;"><strong>注册账户：</Strong><input name="account" type="text" placeholder="请输入账户名"></div>
+					<div id="phone" style="display: block;"><strong>电话号码：</strong><input name="phone" type="text" placeholder="请输入电话号码"></div>
+					<div id="address"><strong>家庭住址：</strong><input name="address" type="text" placeholder="请输入家庭住址"></div>
+					<div id="name"><strong>真实姓名：</strong><input name="name" type="text" placeholder="请输入账户"></div>
+					<div id="submit" style="margin: 0px;background-color: white;"><input type="button" onclick="pas()" value="提  交" style="width: 80px;height: 30px;background-color:#9DBFF6;border-style: solid;border-color: #9DBFF6;border-radius:15px; "><span style="padding-left: 160px;margin-bottom: -10px;"></span><input type="reset" style="width: 80px;height: 30px;background-color:#9DBFF6;border-style: solid;border-color: #9DBFF6;border-radius:15px; " value="重  置"></div>
+					</div>			
+			</div>
+		
+		</div>
+	</form>
+</body>
+</html>

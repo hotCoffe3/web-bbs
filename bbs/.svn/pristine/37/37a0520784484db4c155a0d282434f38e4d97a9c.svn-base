@@ -1,0 +1,32 @@
+package dao.impl;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import bean.Discuss;
+import bean.Post;
+import dao.PageDao;
+
+public class PageDaoImpl implements PageDao {
+
+	static int totlePage=0;
+	static public int count = 1;
+	@Override
+	public List<Post> getPostPaging(int num) {
+		List<Post> list =new ArrayList<Post>();
+		int endPage = 5;
+		int totleCount = 0;
+		int startPage = 1 + (num - 1) * 5;
+		endPage = num * 5;
+		totlePage = totleCount % 5 == 0 ? totleCount / 5 : totleCount / 5 + 1;
+		
+		return list;
+	}
+
+	@Override
+	public List<Discuss> getDiscussPaging(int num) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

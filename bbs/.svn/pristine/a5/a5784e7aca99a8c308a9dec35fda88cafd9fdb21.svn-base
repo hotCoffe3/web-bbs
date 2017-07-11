@@ -1,0 +1,11 @@
+package service;
+
+import bean.Post;
+
+public interface NewsService {
+
+	public int isOld(int postId);
+	public int isNew(int postId);
+	public boolean isNews(int old,int news);
+	public Post doNews(int postId);
+}

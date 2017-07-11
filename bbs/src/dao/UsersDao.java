@@ -1,0 +1,22 @@
+package dao;
+
+import java.util.List;
+
+import bean.Register;
+import bean.Users;
+import bean.UsersType;
+
+public interface UsersDao {
+	public Users getUsersById(int id);
+	public List<Users> findAll();
+	public String checkPhoneexist(String phone);
+	public Users getUsersByPhone(String phone);
+	public Users getUsers(String sql);
+	
+	public boolean updateUsersType(int typeid,int userid);//更新用户信息
+	
+	public Users getUsers(Register register);//通过传入register获得users对象
+	
+	public boolean fixUsersMessage(int usersid, String address );//用于修改个人信息,目前只支持修改地址和密码
+	public boolean fixUsersPassword( int usersid,String password);//用于修改个人信息,目前只支持修改地址和密码
+}

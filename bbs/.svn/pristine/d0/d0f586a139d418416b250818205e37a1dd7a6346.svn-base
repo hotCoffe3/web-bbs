@@ -1,0 +1,12 @@
+package dao;
+
+import java.util.List;
+
+import bean.Discuss;
+import bean.Post;
+
+public interface PageDao {
+	public List<Post> getPostPaging(int num);//对贴子分页
+	
+	public List<Discuss> getDiscussPaging(int num);//对评论分页
+}

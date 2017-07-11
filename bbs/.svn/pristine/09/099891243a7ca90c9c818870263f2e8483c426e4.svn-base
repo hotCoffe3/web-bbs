@@ -1,0 +1,148 @@
+package dao.impl;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import bean.Users;
+import dao.UsersDao;
+import dbc.BaseDao;
+
+public class UsersDaoImpl implements UsersDao {
+	public Users getUsersById(int id) {
+		Users users=new Users();
+		String sql="select * from users where id="+id;
+		new BaseDao();
+		Connection conn=BaseDao.getConnection();
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		try {
+			pstmt=conn.prepareStatement(sql);
+			rs=pstmt.executeQuery();
+			if(rs.next())
+			{
+				users.setAddress(rs.getString("address"));
+				users.setAge(rs.getInt("age"));
+				users.setId(rs.getInt("id"));
+				users.setMajor(rs.getString("major"));
+				users.setName(rs.getString("name"));
+				users.setPhone(rs.getString("phone"));
+				users.setSchool(rs.getString("school"));
+				users.setSex(rs.getString("sex"));
+				users.setTypeId(new UsersTypeDaoImpl().getUsersTypeById(rs.getInt("typeId")));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally
+		{
+			BaseDao.getClose(conn, pstmt, rs);
+		}
+		return users;
+	}
+
+	public List<Users> findAll()
+	{
+		List<Users> list=new ArrayList<Users>();
+		
+		String sql="select * from users";
+		new BaseDao();
+		Connection conn=BaseDao.getConnection();
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		try {
+			pstmt=conn.prepareStatement(sql);
+			rs=pstmt.executeQuery();
+			if(rs.next())
+			{
+				Users users=new Users();
+				users.setAddress(rs.getString("address"));
+				users.setAge(rs.getInt("age"));
+				users.setId(rs.getInt("id"));
+				users.setMajor(rs.getString("major"));
+				users.setName(rs.getString("name"));
+				users.setPhone(rs.getString("phone"));
+				users.setSchool(rs.getString("school"));
+				users.setSex(rs.getString("sex"));
+				users.setTypeId(new UsersTypeDaoImpl().getUsersTypeById(rs.getInt("typeId")));
+				list.add(users);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally
+		{
+			BaseDao.getClose(conn, pstmt, rs);
+		}
+		
+		return list;
+	}
+
+	@Override
+	public String checkPhoneexist(String phone)
+	{
+		String sql="select phone from users where phone='"+phone+"'";
+		Connection conn=BaseDao.getConnection();
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		String str="";
+		try
+		{
+			pstmt=conn.prepareStatement(sql);
+			rs=pstmt.executeQuery();
+			if(rs.next())
+			{
+				str=rs.getString(1);
+			}
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+			// TODO: handle exception
+		}
+		finally
+		{
+			BaseDao.getClose(conn, pstmt, rs);
+		}
+		return str;
+	}
+//	public static void main(String[] args)
+//	{
+//		String str=new UsersDaoImpl().checkPhoneexist("12345678910");
+//		System.out.println(str);
+//	}
+
+	@Override
+	public Users getUsersByPhone(String phone)
+	{
+		Users users=new Users();
+		String sql="select * from users where phone='"+phone+"'";
+		new BaseDao();
+		Connection conn=BaseDao.getConnection();
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		try {
+			pstmt=conn.prepareStatement(sql);
+			rs=pstmt.executeQuery();
+			if(rs.next())
+			{
+				users.setAddress(rs.getString("address"));
+				users.setAge(rs.getInt("age"));
+				users.setId(rs.getInt("id"));
+				users.setMajor(rs.getString("major"));
+				users.setName(rs.getString("name"));
+				users.setPhone(rs.getString("phone"));
+				users.setSchool(rs.getString("school"));
+				users.setSex(rs.getString("sex"));
+				users.setTypeId(new UsersTypeDaoImpl().getUsersTypeById(rs.getInt("typeId")));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally
+		{
+			BaseDao.getClose(conn, pstmt, rs);
+		}
+		return users;
+	}
+
+}

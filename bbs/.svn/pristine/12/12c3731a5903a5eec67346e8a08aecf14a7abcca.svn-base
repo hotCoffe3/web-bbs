@@ -1,0 +1,37 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    
+    <%String title="";
+    if(session.getAttribute("isflag").equals("OK"))
+    	{
+    		title="发帖成功";
+    	}
+    	else
+    	{
+    		title="发帖失败";
+    	}%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<script type="text/javascript">
+	int i=5;
+	function time()
+	{
+		document.getElementById("time").innerHTML=i;
+		if(i==0)
+		{
+			location.href="../index.jsp";
+		}
+		i--;
+	}
+	window.onload=Time;
+</script>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title><%=title %></title>
+</head>
+<body>
+	<center>
+		<strong><%=title %>!将在<span id="time"></span>内返回首页！</strong>
+	</center>
+</body>
+</html>

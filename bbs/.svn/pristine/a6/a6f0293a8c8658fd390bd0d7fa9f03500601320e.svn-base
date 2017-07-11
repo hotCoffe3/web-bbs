@@ -1,0 +1,19 @@
+@CHARSET "UTF-8";
+body{
+	background-color: #60605E;
+}
+#top_div{
+	background-color: white;
+	width: 80%;
+	margin-left: 10%;
+}
+marquee {
+	position: fixed;
+	left: 280px;
+	top: 8px;
+	height:20px;
+	width:69%;
+	text-decoration:underline;
+	font-style:italic;
+	background-color: #E8F2FE;
+}

@@ -1,0 +1,10 @@
+package dao;
+
+import java.util.List;
+
+import bean.Discuss;
+import bean.Post;
+
+public interface DiscussDao {
+	public List<Discuss> getDiscussByPostId(Post post);//根据贴得到该贴的回复
+}

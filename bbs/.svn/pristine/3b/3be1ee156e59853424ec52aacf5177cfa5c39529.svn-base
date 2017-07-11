@@ -1,0 +1,62 @@
+package action;
+
+import java.io.IOException;
+import java.util.Date;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import bean.Discuss;
+import dao.impl.DiscussDaoImpl;
+
+public class DealDiscuss extends HttpServlet {
+
+	public void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		String replyContent=request.getParameter("replyContent");
+		int currentUserId=Integer.parseInt((String)request.getSession().getAttribute("loginId"));
+		String CurrentTime=new Date().toLocaleString();
+		
+		
+		
+		Discuss discuss=new Discuss();
+		
+		
+		
+		boolean dodiscuss=new DiscussDaoImpl().doDiscuss(discuss);
+		
+		
+		if(replyContent==""){
+			response.getWriter().print("");
+		}else{
+			response.getWriter().print("");
+		}
+	}
+
+
+	public void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		
+	}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

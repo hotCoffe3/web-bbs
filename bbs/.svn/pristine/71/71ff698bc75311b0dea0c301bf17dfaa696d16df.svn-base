@@ -1,0 +1,35 @@
+package action;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import service.impl.NewsServiceImpl;
+import bean.Users;
+import dao.impl.PostDaoImpl;
+@WebServlet("/DoNewsServlet")
+public class DoNewsServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+    public DoNewsServlet() {
+        super();
+       
+    }
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String idString=request.getParameter("postId");
+		int postId=Integer.parseInt(idString);
+		Users poster=new PostDaoImpl().getPostByid(postId).getUsersId();
+		request.setAttribute("poster", poster);
+		String typeId=poster.getTypeId().getId()+"";
+		request.setAttribute("typeId", typeId);
+		new NewsServiceImpl().doNews(postId);
+		request.getRequestDispatcher("/bbs/GetPostMessage?postId="+postId).forward(request, response);
+	}
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		this.doGet(request, response);
+	}
+
+}

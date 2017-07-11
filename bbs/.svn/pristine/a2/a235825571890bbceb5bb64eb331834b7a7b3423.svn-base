@@ -1,0 +1,144 @@
+//package action;
+//
+//import java.io.IOException;
+//import java.io.PrintWriter;
+//import java.util.List;
+//
+//import javax.servlet.ServletException;
+//import javax.servlet.annotation.WebServlet;
+//import javax.servlet.http.HttpServlet;
+//import javax.servlet.http.HttpServletRequest;
+//import javax.servlet.http.HttpServletResponse;
+//
+//@WebServlet("/PageServlet")
+//public class PageServlet extends HttpServlet {
+//	private static final long serialVersionUID = 1L;
+//       
+//    public PageServlet() {
+//        super();
+//    }
+//
+//	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+//		String method=request.getParameter("method")==null?"":request.getParameter("method");
+//		String returnStr="";
+//		response.setCharacterEncoding("utf-8");
+//		if(!method.equals(""))
+//		{
+//			switch (method) {
+//			case "homePage":
+//				int num=1;
+//				UserDaoImpl.count=1;
+//				List<User> listPage=new UserDaoImpl().getPage(num);
+//				request.setAttribute("listPage", listPage);
+//				request.setAttribute("lastPage",null );
+//				request.setAttribute("nextPage", "��һҳ");
+//				request.setAttribute("totlePage", UserDaoImpl.totlePage);
+//				request.setAttribute("current", 1);
+//				request.getRequestDispatcher("page/paging.jsp").forward(request, response);
+//				break;
+//			case "nextPaging":
+//				UserDaoImpl.count=UserDaoImpl.count+1;
+//				num=UserDaoImpl.count;
+//				List<User> list=new UserDaoImpl().getPage(num);
+//				request.setAttribute("listPage", list);
+//				if(num==UserDaoImpl.totlePage)
+//				{
+//					request.setAttribute("nextPage",null );
+//				}else
+//				{
+//					request.setAttribute("nextPage", "��һҳ");
+//				}
+//				request.setAttribute("lastPage", "��һҳ");
+//				request.setAttribute("current", num);
+//				request.setAttribute("totlePage", UserDaoImpl.totlePage);
+//				request.getRequestDispatcher("page/paging.jsp").forward(request, response);
+//				break;
+//			case "lastPaging":
+//				UserDaoImpl.count=UserDaoImpl.count-1;
+//				num=UserDaoImpl.count;
+//				List<User> list2=new UserDaoImpl().getPage(num);
+//				request.setAttribute("listPage", list2);
+//				if(num==1)
+//				{
+//					request.setAttribute("lastPage",null );
+//				}else
+//				{
+//					request.setAttribute("lastPage", "��һҳ");
+//				}
+//				request.setAttribute("nextPage", "��һҳ");
+//				request.setAttribute("current", num);
+//				request.setAttribute("totlePage", UserDaoImpl.totlePage);
+//				request.getRequestDispatcher("page/paging.jsp").forward(request, response);
+//				break;
+//			case "jump":
+//				String text=request.getParameter("jumpname")==null?"0":request.getParameter("jumpname");	
+//				int texta=Integer.parseInt(text);				
+//				if(texta!=0)
+//				{
+//					UserDaoImpl.count=texta;
+//					num=UserDaoImpl.count;
+//					List<User> list4=new UserDaoImpl().getPage(num);
+//					request.setAttribute("listPage", list4);
+//					if(num==1)
+//					{
+//						request.setAttribute("lastPage",null );
+//					}else
+//					{
+//						request.setAttribute("lastPage", "��һҳ");
+//					}
+//					if(num==UserDaoImpl.totlePage)
+//					{
+//						request.setAttribute("nextPage",null );
+//					}else
+//					{
+//						request.setAttribute("nextPage", "��һҳ");
+//					}
+//					request.setAttribute("current", num);
+//					request.setAttribute("totlePage", UserDaoImpl.totlePage);
+//					request.getRequestDispatcher("page/paging.jsp").forward(request, response);
+//				}else
+//				{
+//					num=UserDaoImpl.count;
+//					List<User> list4=new UserDaoImpl().getPage(num);
+//					request.setAttribute("listPage", list4);
+//					if(num==1)
+//					{
+//						request.setAttribute("lastPage",null );
+//					}else
+//					{
+//						request.setAttribute("lastPage", "��һҳ");
+//					}
+//					if(num==UserDaoImpl.totlePage)
+//					{
+//						request.setAttribute("nextPage",null );
+//					}else
+//					{
+//						request.setAttribute("nextPage", "��һҳ");
+//					}
+//					request.setAttribute("current", num);
+//					request.setAttribute("totlePage", UserDaoImpl.totlePage);
+//					request.getRequestDispatcher("page/paging.jsp").forward(request, response);
+//				}
+//				
+//				break;
+//			case "endPage":
+//				UserDaoImpl.count=UserDaoImpl.totlePage;
+//				List<User> list3=new UserDaoImpl().getPage(UserDaoImpl.totlePage);
+//				request.setAttribute("listPage", list3);
+//				request.setAttribute("lastPage","��һҳ" );
+//				request.setAttribute("nextPage", null);
+//				request.setAttribute("current", UserDaoImpl.totlePage);
+//				request.setAttribute("totlePage", UserDaoImpl.totlePage);
+//				request.getRequestDispatcher("page/paging.jsp").forward(request, response);
+//				break;
+//			default:
+//				break;
+//			}
+//		}
+//	}
+//
+//	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+//		this.doGet(request, response);
+//	}
+//
+//}

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" version="3.0">
+  <display-name>bbs</display-name>
+  <servlet>
+    <servlet-name>DealDiscuss</servlet-name>
+    <servlet-class>action.DealDiscuss</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>DelDiscussServlet</servlet-name>
+    <servlet-class>action.DelDiscussServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>SubFace</servlet-name>
+    <servlet-class>action.SubFace</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>DealFaceServlet</servlet-name>
+    <servlet-class>action.DealFaceServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>DealDiscuss</servlet-name>
+    <url-pattern>/DealDiscuss</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>DelDiscussServlet</servlet-name>
+    <url-pattern>/DelDiscussServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SubFace</servlet-name>
+    <url-pattern>/SubFace</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>DealFaceServlet</servlet-name>
+    <url-pattern>/DealFaceServlet</url-pattern>
+  </servlet-mapping>
+  <context-param>
+    <param-name>users</param-name>
+    <param-value>G:\\eclipse\\WorkSpace\\bbs\\WebContent\\users</param-value>
+  </context-param>
+  <welcome-file-list>
+    <welcome-file>index.html </welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+  </welcome-file-list>
+</web-app>

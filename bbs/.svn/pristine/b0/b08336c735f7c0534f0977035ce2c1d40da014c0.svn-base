@@ -1,0 +1,173 @@
+package action;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import bean.Post;
+
+@WebServlet("/PageServlet")
+public class PageServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	int jishu=0;//用于下一页上一页计数
+    public PageServlet() {
+        super();
+    }
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String method=request.getParameter("method")==null?"":request.getParameter("method");
+		@SuppressWarnings("unchecked")
+		List<Post> list=(List<Post>)request.getSession().getAttribute("postList");
+		int num=9;//每页记录数
+		int count=list.size();
+		
+		int totleCount=count% num == 0 ? count / num :count/ num + 1;//总页数
+		int endPage = 9;
+		int startPage=1;
+		response.setCharacterEncoding("utf-8");
+		if(!method.equals(""))
+		{
+			switch (method) {
+			case "homePage":
+				if(count==0){
+					//转发到搜索不到任何东西的页面；
+				}
+				startPage=1;			
+				request.setAttribute("startPage", startPage);
+				request.setAttribute("lastPage",null );	
+				request.setAttribute("totlePage", totleCount);
+				request.setAttribute("current", 1);
+				if(count>9)
+				{
+					endPage=9;
+					request.setAttribute("nextPage", "下一页");
+					request.setAttribute("endPage", endPage);
+				}else
+				{
+					endPage=count;
+					request.setAttribute("endPage", endPage);
+					request.setAttribute("nextPage", null);
+				}	
+				request.getRequestDispatcher("page/showSearch.jsp").forward(request, response);
+				break;
+			case "nextPaging":
+				jishu++;
+				startPage=1+jishu*9;
+				request.setAttribute("startPage", startPage);
+				request.setAttribute("lastPage","上一页" );	
+				request.setAttribute("totlePage", totleCount);
+				request.setAttribute("current", jishu+1);
+				if(count>jishu*9+9)
+				{
+					endPage=9*jishu;
+					request.setAttribute("nextPage", "下一页");
+					request.setAttribute("endPage", endPage);;
+				}else
+				{
+					endPage=count;
+					request.setAttribute("endPage", endPage);
+					request.setAttribute("nextPage", null);
+				}
+				request.getRequestDispatcher("page/showSearch.jsp").forward(request, response);
+				break;
+			case "lastPaging":
+				jishu--;
+				startPage=1+jishu*9;
+				request.setAttribute("startPage", startPage);
+				request.setAttribute("nextPage","下一页" );	
+				request.setAttribute("totlePage", totleCount);
+				request.setAttribute("current", jishu+1);
+				if(jishu>0)
+				{
+					endPage=9*jishu;
+					request.setAttribute("lastPage", "上一页");
+					request.setAttribute("endPage", endPage);;
+				}else
+				{
+					endPage=9;
+					request.setAttribute("endPage", endPage);
+					request.setAttribute("lastPage", null);
+				}
+				request.getRequestDispatcher("page/showSearch.jsp").forward(request, response);
+			case "jump":
+				String text=request.getParameter("jumpname")==null?"0":request.getParameter("jumpname");	
+				int texta=Integer.parseInt(text);	
+				if(texta>1&&totleCount>=texta)
+				{
+					request.setAttribute("lastPage", "上一页");
+					jishu=texta-1;
+					startPage=1+jishu*9;
+					request.setAttribute("startPage", startPage);
+					request.setAttribute("totlePage", totleCount);
+					request.setAttribute("current", jishu+1);				
+					if(totleCount>texta)
+					{
+						request.setAttribute("nextPage", "下一页");
+					}else
+					{
+						request.setAttribute("nextPage",null);
+					}
+				}else
+				{
+					if(count==0){
+						//转发到搜索不到任何东西的页面；
+					}
+					startPage=1;			
+					request.setAttribute("startPage", startPage);
+					request.setAttribute("lastPage",null );	
+					request.setAttribute("totlePage", totleCount);
+					request.setAttribute("current", 1);
+					if(count>9)
+					{
+						endPage=9;
+						request.setAttribute("nextPage", "下一页");
+						request.setAttribute("endPage", endPage);
+					}else
+					{
+						endPage=count;
+						request.setAttribute("endPage", endPage);
+						request.setAttribute("nextPage", null);
+					}	
+					request.getRequestDispatcher("page/showSearch.jsp").forward(request, response);
+				}
+				break;
+			case "endPage":
+				if(count==0){
+					//转发到搜索不到任何东西的页面；
+				}else if(count<=9)
+				{
+					startPage=1;			
+					request.getSession().setAttribute("startPage", startPage);
+					request.setAttribute("lastPage",null );	
+					request.setAttribute("totlePage", totleCount);
+					request.setAttribute("current", 1);
+					endPage=count;
+					request.setAttribute("endPage", endPage);
+					request.setAttribute("nextPage", null);
+				}else
+				{
+					startPage=(totleCount-1)*9+1;
+					endPage=count;
+					request.setAttribute("startPage", startPage);
+					request.setAttribute("lastPage","上一页" );
+					request.setAttribute("nextPage", null);
+					request.setAttribute("totlePage", totleCount);
+					request.setAttribute("current", totleCount);
+					request.setAttribute("endPage", endPage);
+				}
+				request.getRequestDispatcher("page/showSearch.jsp").forward(request, response);
+				break;
+			default:
+				break;
+			}
+		}
+	}
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		this.doGet(request, response);
+	}
+}

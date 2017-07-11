@@ -1,0 +1,13 @@
+package service.impl;
+
+import dao.impl.PostDaoImpl;
+import bean.Post;
+import service.PostService;
+
+public class PostServiceImpl implements PostService {
+
+	public Post getPostByid(int id) {
+		return new PostDaoImpl().getPostByid(id);
+	}
+
+}

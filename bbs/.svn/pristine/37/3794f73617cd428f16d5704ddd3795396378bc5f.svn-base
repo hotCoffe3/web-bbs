@@ -1,0 +1,174 @@
+<%@page import="bean.Chat"%>
+<%@page import="action.FindMessage"%>
+<%@page import="bean.Users"%>
+<%@page import="bean.Register"%>
+<%@page import="bean.Login"%>
+<%@page import="service.impl.LoginServiceImpl"%>
+<%@page import="bean.Post"%>
+<%@page import="java.util.List"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8" errorPage="/WEB-INF/error.jsp"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>悄悄话</title>
+<SCRIPT src="<%=request.getContextPath()%>/fromweb/jquery-1.9.1.min.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="<%=request.getContextPath()%>/js/index.js" type="text/javascript"></SCRIPT>
+<script type="text/javascript">
+	function getTime() {
+		var times=new Date();
+		document.getElementById('time').innerHTML=new Date().toLocaleString()+
+		' 星期'+'日一二三四五六'.charAt(new Date().getDay());
+		window.setTimeout(getTime, 1000);
+	}
+	window.onload=getTime;
+</script>
+<script type="text/javascript" >
+function jump()
+{
+	var te=document.getElementById("jumpname").value;
+	if(te=="")
+		{
+			alert("您还未输入跳转页码数");
+		}
+	else
+		{
+			location.href="usersPostPagingServlet?method=jump&jumpname="+te;
+		}
+}
+</script>
+
+<link type="text/css" rel="stylesheet" href="<%=request.getContextPath()%>/css/index.css">
+</head>
+<body>
+<img  id="logo" alt="logo" src="<%=request.getContextPath()%>/images/06.jpg" style="width: 220px;height: 80px;">
+   <marquee scrollamount="6" id="tip"><strong>BBS是一个面向中国软件和软件人的综合社区网站。我们希望您能够在BBS上交流、学习、进步。BBS的各项电子服务的所有权和运作权归家乐网络技术有限公司。 BBS提供的服务将完全按照其发布的章程、服务条款和操作规则严格执行。 会员必须完全同意所有服务条款并完成注册程序，才能成为BBS的正式注册会员并享受BBS提供的更全面的服务。</strong></marquee>
+   <%if(session.getAttribute("login").toString().equals("没登录"))
+	   {
+	%>
+	<div id="menu">
+		<a href="<%=request.getContextPath()%>/index.jsp" id="toIndex"><b>首页</b></a>
+		<a href="<%=request.getContextPath()%>/page/login.jsp" id="toLogin"><b>登录</b></a><b>/</b>
+		<a href="<%=request.getContextPath()%>/page/register.jsp" id="toRes"><b>注册</b></a>
+	</div>
+	<%}else
+		{
+	%>
+		<div id="menu"><a href="<%=request.getContextPath()%>/index.jsp" id="toIndex"><b>首页</b></a>
+		你有<a href="/bbs/page/showNews.jsp"><%=session.getAttribute("s")%></a> 信息。欢迎，
+		<a href="/bbs/showUsersMessageServlet?biaozhi=1&usersId=<%=session.getAttribute("loginId")%>" id="toLogin"><b><%=((Register)session.getAttribute("ClientMessageAfterLogin")).getAccount()%></b></a>
+		<a href="/bbs/logoutServlet" id="toRes"><b>注销</b></a>
+	</div>
+	<% }%>
+   <hr>
+	<span id="time">此处显示时间</span>
+	<span id="web">
+		<span onmousemove="st(this)" onmouseout="reflash(this)">
+			 <%
+  			 if(session.getAttribute("login").toString().equals("没登录"))
+	  		 {
+		%>
+			<b><a href="<%=request.getContextPath()%>/index.jsp">首 &nbsp;&nbsp;页</a></b>
+			<%}else{ %>
+			<b><a href="/bbs/NewsServlet">首 &nbsp;&nbsp;页</a></b>
+			<%} %>
+		</span>
+		<span onmousemove="st(this)"  onmouseout="reflash(this)">
+			<b><a href="/bbs/TypePageServlet?typeId=1&method=homePage">学无止境</a></b>
+		</span>
+		<span onmousemove="st(this)" onmouseout="reflash(this)">
+			<b><a href="/bbs/TypePageServlet?typeId=2&method=homePage">职来职往</a></b>
+		</span>
+		<span onmousemove="st(this)"  onmouseout="reflash(this)">
+			<b><a href="/bbs/TypePageServlet?typeId=4&method=homePage">游戏平台</a></b>
+		</span><span onmousemove="st(this)"  onmouseout="reflash(this)">
+			<b><a href="/bbs/TypePageServlet?typeId=3&method=homePage">社会交际</a></b>
+		</span><span onmousemove="st(this)"  onmouseout="reflash(this)">
+			<b><a href="">成为会员</a></b>
+		</span>
+		<span onmousemove="st(this)"  onmouseout="reflash(this)">
+			<b><a href="">关于我们</a></b>
+		</span>
+	</span>		
+		
+		
+		
+		
+		
+		<!-- <img alt="" src="images/baidu.gif" id="baidu"> -->
+		<form  action="<%=request.getContextPath() %>/searchServlet" method="get">
+			<div id="selectDiv">
+			<strong>条件：</strong>
+				<select style="height: 35px;" name="select">
+				    <option value="title">文章标题</option>
+				    <option value="nickName">文章作者</option>
+				</select>
+			</div>
+			<div id="textDiv">
+				<strong id="s">关键字：</strong><input type="text" id="text" name="text" placeholder="请输入搜索内容" style="height: 30px;"/>	
+			<input type="submit" id="search" value=""></div>	
+		</form>
+		<% 
+		List<Chat> list=(List<Chat>)session.getAttribute("chatRecord");
+		if(list.size()==0)
+			{
+		%>
+				<div id="chatDiv"><h4>你们还没有聊过天</h4>
+				赶快给ta发个悄悄话吧。
+			<form action="<%=request.getContextPath() %>/ChatServlet" method="post">
+				<textarea id="chattext" name="chattext" placeholder="点击此处输入聊天内容" style="height: 120px;width:500px"></textarea>
+				<input type="submit" id="chatbutton" name="chatbutton" value="发送" style="width: 60px;height: 20px;background-color: #3385ff;color: white;"/>
+				<input type="text" id="name" name="username" value="<%=request.getAttribute("chatInfoId") %>" style="display: none"/>
+			</form>
+		</div>
+		<% 
+			}else
+			{
+		%>
+			<div id="chatDiv">
+		<%
+				for (Chat chat:list) {
+		%>
+						
+							<div style="color:#346df0;"><%=new LoginServiceImpl().findNickNameByUsersId(chat.getLoginId()).getNickName()  %>&nbsp;<%=chat.getTime() %></div>
+							&nbsp;&nbsp;<div><%=chat.getContent() %></div>
+							<br/>
+						
+		<%
+		}
+		%>
+		<form action="<%=request.getContextPath() %>/ChatServlet" method="post">
+			<textarea id="chattext" name="chattext" placeholder="点击此处输入聊天内容" style="height: 120px;width:500px"></textarea>
+			<input type="submit" id="chatbutton" name="chatbutton" value="发送" style="width: 60px;height: 20px;background-color: #3385ff;color: white;"/>
+			<input type="text" id="name" name="username" value="<%=request.getAttribute("chatInfoId") %>" style="display: none"/>
+		</form>
+			</div>
+		<%}%>
+		
+		<div id="info">
+	<%
+	int usersidinfo=Integer.parseInt(request.getAttribute("chatInfoId").toString());
+	String name=new LoginServiceImpl().findNickNameByUsersId(usersidinfo).getNickName();
+	Users users=(Users)request.getAttribute("usersinfo");%>
+	<c:choose>
+		<c:when test="${(sessionScope.userface.face==null||sessionScope.userface.face=='')&&sessionScope.currentUser.sex=='男'}">
+			<img alt="" src="${pageContext.request.contextPath}/images/face_img/user0.gif" style="width: 100px;height: 100px;">
+		</c:when>
+		<c:when test="${(sessionScope.userface.face==null||sessionScope.userface.face=='')&&sessionScope.currentUser.sex=='女'}">
+			<img alt="" src="${pageContext.request.contextPath}/images/face_img/user1.gif" style="width: 100px;height: 100px;">
+		</c:when>
+		<c:otherwise>
+			<img alt="" src="${pageContext.request.contextPath}/${sessionScope.userface.face}" style="width: 100px;height: 100px;">
+		</c:otherwise>
+	</c:choose>
+	<br/><br/>&nbsp;用户：<%= name%>
+	<br/><br/>&nbsp;性别：<%= users.getSex()%>
+	<br/><br/>&nbsp;学校：<%=users.getSchool() %>
+	<br/><br/>&nbsp;专业：<%=users.getMajor()%>
+	</div>
+	
+	
+</body>
+</html>

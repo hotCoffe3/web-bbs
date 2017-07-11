@@ -1,0 +1,321 @@
+<%@page import="action.FindMessage"%>
+<%@page import="bean.Register"%>
+<%@page import="bean.Login"%>
+<%@page import="service.impl.LoginServiceImpl"%>
+<%@page import="service.LoginService"%>
+<%@page import="java.util.*"%>
+<%@page import="bean.Post"%>
+<%@page import="bean.Pay"%>
+<%@page import="bean.Users"%>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="service.impl.IndexShowServiceImpl"%>
+<%@page import="dao.impl.PayDaoImpl"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8" errorPage="/WEB-INF/error.jsp"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>首页</title>
+<SCRIPT src="./fromweb/jquery-1.9.1.min.js" type="text/javascript"></SCRIPT>
+<SCRIPT src="js/index.js" type="text/javascript"></SCRIPT>
+	<style>
+		#pay {
+			background: url('/bbs/images/all.png') no-repeat;
+			display: inline-block;
+			
+			background-position: 0 -412px;
+			margin-left: 30px;
+			height: 36px;
+			width: 146px;
+		}
+		#pay:HOVER {
+			background: url('/bbs/images/all.png') no-repeat;
+			display: inline-block;
+			
+			background-position: 0 -448px;
+			margin-left: 30px;
+			height: 36px;
+			width: 146px;
+		}
+		#text11{
+			position:relative;
+			bottom:90%;
+			left:20%;
+		}
+		
+	</style>
+<script type="text/javascript">
+	function getTime() {
+		var times=new Date();
+		document.getElementById('time').innerHTML=new Date().toLocaleString()+
+		' 星期'+'日一二三四五六'.charAt(new Date().getDay());
+		window.setTimeout(getTime, 1000);
+	}
+	window.onload=getTime;
+
+	function getSum(){
+		var mon=null;
+		var obj=document.getElementsByName("gender");
+		for (var i=0;i<obj.length;i++){ //遍历Radio 
+			if(obj[i].checked){ 
+			mon=obj[i].value; 
+			}
+		}
+		var sumNum=document.getElementById("SumNumber");
+		sumNum.innerHTML=mon;
+	}
+	function ajaxforCreatePay()
+		{
+			var mon=null;
+			var obj=document.getElementsByName("gender");
+			for (var i=0;i<obj.length;i++){ //遍历Radio 
+				if(obj[i].checked){ 
+				mon=obj[i].value; 
+				}
+			}
+			if(mon==null){
+				alert("请选择要充值的期限！");
+			}else{
+				var http_request=false;
+				if(window.XMLHttpRequest)//对于非IE浏览器
+				{
+					http_request=new XMLHttpRequest();
+				}
+				else if(window.ActiveXObject)//IE浏览器
+				{
+					try
+					{
+					   http_request=new ActiveXObject("Msxml2.XMLHTTP");//不同版本的IE
+					}
+					catch (e) 
+					{
+						try
+						{
+							http_request=new ActiveOXBject("Microsoft.XMLHTTP");//不同版本的IE
+						}
+						catch (e) 
+						{
+							throw e;
+						}
+					}
+				}
+				if(!http_request)
+				{
+					alert("不能创建XMLHttpRequest对象实例！");
+					return false;
+				}
+					
+				http_request.open("get","/bbs/CreatePay?paymon="+mon,true);
+				http_request.send(null);
+				function getResult()
+				{
+					if(http_request.readyState==4)
+					{
+						if(http_request.status==200)
+						{
+								var text=http_request.responseText;
+								var d=text.split(",");
+								var uuid=d[0];
+								var paytime=d[1];
+								var payMsg=document.getElementById("payMsg");
+								var ss="当前支付编号："+uuid+" 成交时间："+paytime+" 金额：";
+								payMsg.innerHTML=ss;
+								var mon1=document.getElementById("money");
+								mon1.innerHTML=mon;
+								var bank=document.getElementById("form");
+								bank.style.display="block";
+								var pay=document.getElementById("pay");
+								pay.style.display="block";
+								
+								var orderid=document.getElementById("orderid");
+								orderid.value=uuid;
+	
+						}
+						else
+						{
+							alert("你所请求的页面有错误！错误代码："+http_request.status);
+						}
+					}
+				}
+				http_request.onreadystatechange=getResult;
+			}
+		}
+		
+</script>
+<link type="text/css" rel="stylesheet" href="<%=request.getContextPath()%>/css/index.css">
+</head>
+<body>
+   <img  id="logo" alt="logo" src="/bbs/images/06.jpg" style="width: 220px;height: 80px;">
+   <marquee scrollamount="6" id="tip"><strong>BBS是一个面向中国软件和软件人的综合社区网站。我们希望您能够在BBS上交流、学习、进步。BBS的各项电子服务的所有权和运作权归家乐网络技术有限公司。 BBS提供的服务将完全按照其发布的章程、服务条款和操作规则严格执行。 会员必须完全同意所有服务条款并完成注册程序，才能成为BBS的正式注册会员并享受BBS提供的更全面的服务。</strong></marquee>
+   <%if(session.getAttribute("login").toString().equals("没登录"))
+	   {
+	%>
+	<div id="menu">
+		<a href="<%=request.getContextPath()%>/page/login.jsp" id="toLogin"><b>登录</b></a><b>/</b>
+		<a href="<%=request.getContextPath()%>/page/register.jsp" id="toRes"><b>注册</b></a>
+	</div>
+	<%}else
+		{
+	%>
+		<div id="menu">你有<a href="/bbs/page/showNews.jsp"><%=session.getAttribute("s")%></a> 信息。欢迎，
+		<a href="/bbs/showUsersMessageServlet?biaozhi=haha&usersId=<%=session.getAttribute("loginId")%>" id="toLogin"><b><%=((Register)session.getAttribute("ClientMessageAfterLogin")).getAccount()%></b></a>
+		<a href="/bbs/checkout" id="toRes"><b>注销</b></a>
+	</div>
+	<%} %>
+   <hr>
+	<span id="time">此处显示时间</span>
+	<span id="web">
+		<span onmousemove="st(this)" onmouseout="reflash(this)">
+			<b><a href="<%=request.getContextPath()%>/index.jsp">首 &nbsp;&nbsp;页</a></b>
+		</span>
+		<span onmousemove="st(this)"  onmouseout="reflash(this)">
+			<b><a href="/bbs/TypePageServlet?typeId=1&method=homePage">学无止境</a></b>
+		</span>
+		<span onmousemove="st(this)" onmouseout="reflash(this)">
+			<b><a href="/bbs/TypePageServlet?typeId=2&method=homePage">职来职往</a></b>
+		</span>
+		<span onmousemove="st(this)"  onmouseout="reflash(this)">
+			<b><a href="/bbs/TypePageServlet?typeId=4&method=homePage">游戏平台</a></b>
+		</span><span onmousemove="st(this)"  onmouseout="reflash(this)">
+			<b><a href="/bbs/TypePageServlet?typeId=3&method=homePage">社会交际</a></b>
+		</span><span onmousemove="st(this)"  onmouseout="reflash(this)">
+			<b><a href="">成为会员</a></b>
+		</span>
+		<span onmousemove="st(this)"  onmouseout="reflash(this)">
+			<b><a href="">关于我们</a></b>
+		</span>
+	</span>		
+		<!-- <img alt="" src="images/baidu.gif" id="baidu"> -->
+		<form  action="<%=request.getContextPath() %>/searchServlet" method="get">
+			<div id="selectDiv">
+			<strong>条件：</strong>
+				<select style="height: 35px;" name="select">
+				    <option value="content">文章内容</option>
+				    <option value="title">文章标题</option>
+				    <option value="nickName">文章作者</option>
+				</select>
+			</div>
+			<div id="textDiv">
+				<strong id="s">关键字：</strong><input type="text" id="text" name="text" placeholder="请输入搜索内容" style="height: 30px;"/>	
+			<input type="submit" id="search" value=""></div>	
+		</form>
+		
+		<%
+			Users user=(Users)session.getAttribute("currentUser");
+			List<Pay> ls=new PayDaoImpl().findAllPayByUserid(user.getId());
+			long currrentTime=new Date().getTime();
+			long sum=0;
+			for(Pay pay:ls){
+				SimpleDateFormat formatter = new SimpleDateFormat( "yyyy-MM-dd ");
+				Date endtime = formatter.parse(pay.getEndTime());
+				long endTime=endtime.getTime();
+				if(endTime>currrentTime){
+					sum=endTime-currrentTime;
+				}
+			}
+			long min=sum/1000;
+			long sec=min/60;
+			long hour=sec/60;
+			long day=hour/24;
+			
+		%>
+ <div style="color: red;">当前您的用户状态为：${sessionScope.currentUser.typeId.type} 会员剩余时间为：<%=day %>天</div>
+	<table border="1px" align="center" width="800px" height="500px">
+		<tr>
+			<th colspan="6" align="center">会员充值</th>
+		</tr>
+		<tr>
+			<td align="center">
+				用户类型
+			</td>
+			<td align="center" colspan="3">
+				用户权限
+			</td>
+			<td align="center">
+				资费说明
+			</td>
+			<td align="center">
+				充值期限
+			</td>
+		</tr>
+		<tr>
+			<td>普通用户</td>
+			<td>普通权限1</td>
+			<td>普通权限2</td>
+			<td>普通权限3</td>
+			<td>/</td>
+			<td>/</td>
+		</tr>
+		<tr>
+			<td>普通会员</td>
+			<td>会员特权1</td>
+			<td>会员特权2</td>
+			<td>会员特权3</td>
+			<td>10元/月，充值月份越多，优惠越多</td>
+			<td>
+				一个月
+				<input type="radio" name="gender" id="month1" value="10" onclick="javascript:getSum()"/><br/>
+				两个月
+				<input type="radio" name="gender" value="18" onclick="javascript:getSum()"/><br/>
+				三个月
+				<input type="radio" name="gender" value="27" onclick="javascript:getSum()"/><br/>
+				五个月
+				<input type="radio" name="gender" value="45" onclick="javascript:getSum()"/><br/>
+			</td>
+		</tr>
+		<tr>
+			<td>年费会员</td>
+			<td>会员特权1</td>
+			<td>会员特权2</td>
+			<td>会员特权3</td>
+			<td>100元/年，充值年份越多，优惠越多</td>
+			<td>
+				一年
+				<input type="radio" name="gender" id="month2" value="100" onclick="javascript:getSum()"/><br/>
+				两年
+				<input type="radio" name="gender" value="180" onclick="javascript:getSum()"/><br/>
+				三年
+				<input type="radio" name="gender" value="270" onclick="javascript:getSum()"/><br/>
+				五年
+				<input type="radio" name="gender" value="450" onclick="javascript:getSum()"/><br/>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="5">费用总额：
+				<span id="SumNumber">
+				</span>
+			</td>
+			<td align="center">
+				<button onclick="javascript:ajaxforCreatePay()">确定</button>
+			</td>
+		</tr>
+	</table>
+	<div align="center">
+		<span style="background-color: #d1e8ff;font-family:楷体 ;font-size: 16pt;">
+			<span id="payMsg"></span><span id="money" style="color: red"></span>
+		</span>
+	</div>
+	
+	<div align="center">
+		<form method="post" action="/bbs/OrderServlet" id="form" style="display: none">
+			<input id="orderid" type="hidden" name="orderid" value=""/>
+			<div id="text11" align="left">选择银行：</div><br/>
+			<input type="radio" name="pd_FrpId" value="ICBC-NET-B2C" checked="checked"/>工商银行
+			<img src="/bbs/bank_img/icbc.bmp" align="middle"/>
+			<input type="radio" name="pd_FrpId" value="BOC-NET-B2C"/>中国银行
+			<img src="/bbs/bank_img/bc.bmp" align="middle"/><br/><br/>
+			<input type="radio" name="pd_FrpId" value="ABC-NET-B2C"/>农业银行
+			<img src="/bbs/bank_img/abc.bmp" align="middle"/>
+			<input type="radio" name="pd_FrpId" value="CCB-NET-B2C"/>建设银行
+			<img src="/bbs/bank_img/ccb.bmp" align="middle"/><br/><br/>
+			<input type="radio" name="pd_FrpId" value="BOCO-NET-B2C"/>交通银行
+			<img src="/bbs/bank_img/bcc.bmp" align="middle"/>
+			<input type="radio" name="pd_FrpId" value="PINGANBANK-NET"/>平安银行
+			<img src="/bbs/bank_img/pingan.bmp" align="middle"/><br/><br/>
+			<a id="pay" style="display: none;" href="javascript:document.getElementById('form').submit();"></a>
+		</form>
+		
+	</div>
+  </body>
+</html>

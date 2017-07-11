@@ -1,0 +1,7 @@
+package dao;
+
+import bean.Post;
+
+public interface PostDao {
+	public Post getPostByid(int id);//通过postid得到post对象
+}
